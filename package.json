@@ -12,7 +12,8 @@
     "db:studio": "prisma studio",
     "db:migrate": "prisma migrate dev",
     "seed": "tsx prisma/seed.ts",
-    "seed:reset": "rm -f prisma/dev.db prisma/dev.db-journal prisma/dev.db-wal prisma/dev.db-shm && npm run db:ensure"
+    "seed:reset": "rm -f prisma/dev.db prisma/dev.db-journal prisma/dev.db-wal prisma/dev.db-shm && npm run db:ensure",
+    "verify:harness": "tsx scripts/verify-harness.ts"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.9.1",
