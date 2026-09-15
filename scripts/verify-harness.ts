@@ -103,4 +103,8 @@ function verify() {
   process.exit(1)
 }
 
-process.argv.includes('--update') ? update() : verify()
+if (process.argv.includes('--update')) {
+  update()
+} else {
+  verify()
+}

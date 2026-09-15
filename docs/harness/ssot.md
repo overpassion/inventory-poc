@@ -761,7 +761,7 @@ SSOT가 요구하는데 코드에 아직 없는 것. **판단이 갈리지 않�
 | `GAP-02` | `app/expiry/` `app/history/` `app/settings/` 라우트 없음 (M7) | 홈 할 일 배너가 `/expiry` 로 링크되어 **404** |
 | `GAP-03` | `REQ-N-07` 백업 절차가 `README.md` 에 없다 | 요구사항 대비 **미이행** |
 | ~~`GAP-04`~~ | `npm run lint` 실패 (`react-hooks/purity` 2건) | **해소됨** (2026-09-15) — `lib/date.ts` 에 `daysSince()` 를 추가하고, 두 곳 모두 `daysSince` / `daysUntil` 헬퍼를 쓰도록 바꿨다. `npm run verify` 5단계가 처음으로 끝까지 통과 |
-| `GAP-05` | `scripts/verify-harness.ts:106` 린트 **경고** 1건 (`no-unused-expressions`) | 삼항 표현식을 문으로 쓴 것. 경고라 `lint` 는 통과하지만 출력이 깨끗하지 않다. `scripts/` 는 §0.6 상 AI 가 **실행만** 하는 영역이라 고치려면 승인이 필요하다 |
+| ~~`GAP-05`~~ | `scripts/verify-harness.ts:106` 린트 경고 (`no-unused-expressions`) | **해소됨** (2026-09-15, 사람 승인) — 삼항 표현식을 `if/else` 로 바꿨다. `npm run lint` 가 **0 problems** |
 
 ### 6.3 정책으로 해소됨 (RESOLVED)
 
