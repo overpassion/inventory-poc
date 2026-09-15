@@ -54,9 +54,9 @@ src/generated
 # typescript
 *.tsbuildinfo
 
-# Next.js 가 자동 생성하는 에이전트 규칙 파일 (이 프로젝트에서는 쓰지 않음)
-AGENTS.md
-CLAUDE.md
+# 에이전트 진입점 — 추적한다 (AGENTS.md 가 docs/harness/ssot.md 로 라우팅)
+# next dev 가 nextjs-agent-rules 블록을 자동 갱신하지만 마커 밖 내용은 보존된다
+# CLAUDE.md 는 @AGENTS.md 한 줄
 
 # 작업 산출물
 .playwright-mcp/
