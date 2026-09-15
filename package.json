@@ -7,13 +7,15 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "db:ensure": "tsx scripts/ensure-db.ts",
     "db:studio": "prisma studio",
     "db:migrate": "prisma migrate dev",
     "seed": "tsx prisma/seed.ts",
     "seed:reset": "rm -f prisma/dev.db prisma/dev.db-journal prisma/dev.db-wal prisma/dev.db-shm && npm run db:ensure",
-    "verify:harness": "tsx scripts/verify-harness.ts"
+    "verify:harness": "tsx scripts/verify-harness.ts",
+    "verify": "npm run verify:harness && npm run typecheck && npm run lint && npm run test && npm run build"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.9.1",

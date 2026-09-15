@@ -12,7 +12,7 @@
 | 항목 | 내용 | 상태 |
 |---|---|---|
 | **입력** | `ssot.md` 의 `INV-*`(불변식 7) · `DOD-*`(완료기준 12) · `REQ-N-*`(비기능 9) | ⏳ |
-| **자동 검증** | `npm test` · `npm run build` · TypeScript 에러 0 | ⏳ |
+| **자동 검증** | **`npm run verify`** — 아래 5단계를 순서대로, 실패하면 거기서 멈춘다 | ✅ 있음 |
 | **하네스 검증** | `npm run verify:harness` — 보호 경로가 승인 없이 바뀌면 exit 1 (`ssot.md` §0.6) | ✅ 있음 |
 | **수동 검증** | 자동화 수단이 없는 항목을 어떻게 볼 것인가 (`DOD-10` 반응형, `REQ-N-05` 한글 IME 등) | ⏳ |
 | **증거** | 무엇을 남길 것인가 (`docs/screenshots/` 관례 재사용?) | ⏳ |
@@ -22,6 +22,40 @@
 
 > **통과 기준을 낮춰서 초록 불을 만들지 않는다.** 스크립트나 기준을 고쳐야 한다고 판단되면 **정책 변경**이므로 사람 승인을 받는다.
 > `tests/**` 는 작성·수정할 수 있으나, **테스트가 무엇을 전제하는지는 사람이 검토한다** — 전제가 틀리면 초록 불이 거짓말이 된다.
+
+## `npm run verify` — 자동 검증 체인
+
+```
+verify:harness  →  typecheck  →  lint  →  test  →  build
+```
+
+싼 것부터 비싼 것 순이며, **한 단계라도 실패하면 뒤는 돌지 않는다.**
+
+| # | 단계 | 명령 | 잡는 것 | 비용 |
+|---|---|---|---|---|
+| 1 | 하네스 | `verify:harness` | 보호 경로 무단 변경 (§0.6) | 즉시 |
+| 2 | 타입 | `tsc --noEmit` | 타입 오류 (`strict: true`) | ~15초 |
+| 3 | 린트 | `eslint` | React 규칙 위반 등 | ~10초 |
+| 4 | 테스트 | `vitest run` | `INV-01`~`INV-07` (19케이스) | ~1초 |
+| 5 | 빌드 | `prisma generate && next build` | Next 빌드 오류, 라우트 14개 | ~90초 |
+
+### 체인에 들어가지 않는 것
+
+아래는 **읽기 전용 점검**이라 체인에서 빼고 필요할 때 따로 돌린다.
+
+```
+npx tsx scripts/verify-m1.ts         # 시드 상태 7항목 (불변식·로트분리·임박·배송중·팝업)
+npx tsx scripts/verify-headline.ts   # 목록 대표 로트 (거점 합산 버그 회귀 방지)
+npx tsx scripts/snapshot.ts          # 거점별 재고 — 이동 전후 총량 비교
+npx prisma validate                  # 스키마 유효성
+npx prisma migrate status            # 마이그레이션 적용 상태
+```
+
+### 주의 — `test` 단계는 실제 `dev.db` 를 쓴다
+
+별도 테스트 DB가 없다. `tests/helpers.ts` 가 `prisma/dev.db` 에 직접 붙고, 각 테스트가 `beforeAll`/`afterAll` 에서 **자기가 만든 것만** 지운다 (고정 `EXPIRY` 날짜·팝업 이름으로 범위를 좁힌다). `vitest.config.ts` 의 `fileParallelism: false` 도 같은 이유다.
+
+격리는 작동하지만 **실행 중에는 dev.db 가 실제로 바뀐다.** 시연 도중에는 돌리지 않는다. 어긋나면 `npm run seed:reset`.
 
 ## 먼저 메워야 할 공백
 
