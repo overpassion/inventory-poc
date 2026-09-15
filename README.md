@@ -1,5 +1,14 @@
 # 재고관리 PoC — 강아지 간식
 
+[![verify](https://github.com/overpassion/inventory-poc/actions/workflows/verify.yml/badge.svg)](https://github.com/overpassion/inventory-poc/actions/workflows/verify.yml)
+[![last commit](https://img.shields.io/github/last-commit/overpassion/inventory-poc)](https://github.com/overpassion/inventory-poc/commits)
+
+![Next.js](https://img.shields.io/badge/Next.js-16.3.1-000?logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-19.2.8-087ea4?logo=react&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-7.9.1-2D3748?logo=prisma&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-%ED%8C%8C%EC%9D%BC%20%ED%95%98%EB%82%98-003B57?logo=sqlite&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
+
 풀필먼트 3사와 자사창고에 흩어진 재고를 **유통기한 단위(로트)** 로 관리하고,
 오프라인 팝업 반출·정산까지 추적하는 사내 재고관리 앱.
 
