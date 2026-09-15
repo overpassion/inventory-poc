@@ -22,6 +22,11 @@ export function daysUntil(target: Date): number {
   return Math.round((dateOnly(target).getTime() - today().getTime()) / MS)
 }
 
+/** 발송 후 경과일처럼 '얼마나 됐나'를 셀 때. 렌더 중 Date.now() 직접 호출을 피한다 */
+export function daysSince(from: Date): number {
+  return Math.floor((Date.now() - from.getTime()) / 86_400_000)
+}
+
 /** 2026-11-30 형식 */
 export function formatDate(d: Date): string {
   return dateOnly(d).toISOString().slice(0, 10)

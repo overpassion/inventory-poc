@@ -760,7 +760,8 @@ SSOT가 요구하는데 코드에 아직 없는 것. **판단이 갈리지 않�
 | `GAP-01` | `actions/adjust.ts` 없음 — `REQ-F-08` 재고 조정 미구현 (M7) | `06 §2` 에 명시되어 있으나 파일 부재 |
 | `GAP-02` | `app/expiry/` `app/history/` `app/settings/` 라우트 없음 (M7) | 홈 할 일 배너가 `/expiry` 로 링크되어 **404** |
 | `GAP-03` | `REQ-N-07` 백업 절차가 `README.md` 에 없다 | 요구사항 대비 **미이행** |
-| `GAP-04` | **`npm run lint` 가 실패한다 (exit 1)** — 따라서 `npm run verify` 체인이 3단계에서 멈추고 `test`·`build` 가 돌지 않는다 | `src/app/transfers/[id]/page.tsx:26` 과 `src/components/TransferForm.tsx:100` 에서 렌더 중 `Date.now()` 호출 (`react-hooks/purity`). 추가로 `scripts/verify-harness.ts:106` 경고 1건 |
+| ~~`GAP-04`~~ | `npm run lint` 실패 (`react-hooks/purity` 2건) | **해소됨** (2026-09-15) — `lib/date.ts` 에 `daysSince()` 를 추가하고, 두 곳 모두 `daysSince` / `daysUntil` 헬퍼를 쓰도록 바꿨다. `npm run verify` 5단계가 처음으로 끝까지 통과 |
+| `GAP-05` | `scripts/verify-harness.ts:106` 린트 **경고** 1건 (`no-unused-expressions`) | 삼항 표현식을 문으로 쓴 것. 경고라 `lint` 는 통과하지만 출력이 깨끗하지 않다. `scripts/` 는 §0.6 상 AI 가 **실행만** 하는 영역이라 고치려면 승인이 필요하다 |
 
 ### 6.3 정책으로 해소됨 (RESOLVED)
 
