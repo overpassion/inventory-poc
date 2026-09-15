@@ -1,0 +1,15 @@
+# 빈 이슈를 막는다 — 유지보수 작업은 6개 항목이 채워져야 시작할 수 있다.
+blank_issues_enabled: false
+
+contact_links:
+  - name: 규범 사양 (SSOT)
+    url: https://github.com/overpassion/inventory-poc/blob/main/docs/harness/ssot.md
+    about: 요구사항 · 아키텍처 · 불변식 · 보호 영역이 전부 여기 하나에 있다
+
+  - name: 에이전트 진입점 (AGENTS.md)
+    url: https://github.com/overpassion/inventory-poc/blob/main/AGENTS.md
+    about: 어떤 질문을 ssot.md 의 어느 절에서 찾는지 라우팅 표
+
+  - name: 지금 막혀 있는 것 / 할 일
+    url: https://github.com/overpassion/inventory-poc/blob/main/docs/harness/ssot.md#6-충돌-기록
+    about: ESCALATE(사람 판단 대기) · DRIFT(문서 드리프트) · GAP(구현 갭)

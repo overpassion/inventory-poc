@@ -1,0 +1,109 @@
+name: 유지보수 작업
+description: 에이전트가 작업을 시작하는 데 필요한 6개 항목
+title: "[유지보수] "
+labels: ["maintenance"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        아래 6개가 채워지면 에이전트가 작업을 시작할 수 있다.
+        **비어 있으면 에이전트는 추측하지 않고 되묻는다.**
+
+        규범은 [`docs/harness/ssot.md`](https://github.com/overpassion/inventory-poc/blob/main/docs/harness/ssot.md) 하나이고,
+        진입점은 [`AGENTS.md`](https://github.com/overpassion/inventory-poc/blob/main/AGENTS.md) 다.
+
+  - type: input
+    id: harness-id
+    attributes:
+      label: 관련 하네스 ID
+      description: "`ssot.md` 의 ID. 없으면 `없음` 이라고 쓴다."
+      placeholder: "GAP-02 · REQ-F-09 · DOD-09"
+    validations:
+      required: true
+
+  - type: textarea
+    id: background
+    attributes:
+      label: 1. 배경 — 왜 필요한가
+      description: 지금 무엇이 문제이고, 안 고치면 무슨 일이 생기는가.
+      placeholder: |
+        홈 화면의 할 일 배너가 /expiry 로 링크되는데 라우트가 없어 404 다.
+        시연을 첫 화면에서 시작하는데 거기서 막힌다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: 2. 변경할 내용 — 무엇을 수정하는가
+      description: 건드릴 파일·화면·함수를 구체적으로. 아직 모르면 `조사 필요` 라고 쓴다.
+      placeholder: |
+        - src/app/expiry/page.tsx 신규 — 임박·만료를 날짜순으로
+        - 만료 카드에 "자동으로 빠지지 않습니다" 문구 + 폐기 버튼
+        - src/lib/expiry.ts 재사용 (판정 로직은 그대로)
+    validations:
+      required: true
+
+  - type: textarea
+    id: done
+    attributes:
+      label: 3. 종료 조건 — 무엇이 참이면 완료인가
+      description: 검증 가능한 문장으로 쓴다. `ssot.md` §2.4 의 `DOD-*` 를 인용해도 된다.
+      placeholder: |
+        - DOD-09 임계일 이내 로트가 알림에 뜨고, 폐기 확정 전까지 재고에서 빠지지 않는다
+        - 홈 배너를 눌러 /expiry 로 이동했을 때 404 가 아니다
+        - 폰 390px 에서 가로 스크롤이 없다 (DOD-10)
+    validations:
+      required: true
+
+  - type: textarea
+    id: machine-check
+    attributes:
+      label: 4. 기계 검증 — 어떤 테스트가 판정하는가
+      description: |
+        사람 눈이 아니라 **명령이 판정**해야 한다.
+        자동 수단이 없으면 `없음 — 수동 확인` 이라 쓰고, 무엇을 어떻게 볼지 적는다.
+      placeholder: |
+        npm run verify                 5단계 전부 통과
+        tests/expiry.test.ts 신규      임박 판정 경계값 (임계일 당일 / 하루 전 / 하루 후)
+        수동                           시드 상태에서 만료 3건 · 임박 4건이 목록에 보인다
+    validations:
+      required: true
+
+  - type: textarea
+    id: boundary
+    attributes:
+      label: 5. 건드리면 안 되는 것 — 변경 경계는 어디인가
+      description: 기본 금지 외에 이 작업에서 특별히 손대면 안 되는 것을 덧붙인다.
+      value: |
+        - `ssot.md` §0.6 읽기 전용 영역 — 문서 · 하네스 규칙 · 검증 스크립트
+        - `ssot.md` §2.3 `OOS-*` 범위 제외 항목
+        - `RULE-01` 재고 변경은 `lib/stock.ts` 의 `applyMovement()` 한 곳
+        - (이 작업 고유의 경계를 여기에 추가)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: max-loops
+    attributes:
+      label: 6. 구현 루프 최대 횟수 — 몇 번까지 재시도하는가
+      description: 이 횟수 안에 **4번(기계 검증)** 을 통과하지 못하면 멈추고 보고한다.
+      options:
+        - "1회 — 한 번에 안 되면 바로 보고"
+        - "3회 (기본)"
+        - "5회"
+        - "제한 없음 — 사람이 중단할 때까지"
+      default: 1
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: 착수 전 확인
+      options:
+        - label: "`ssot.md` §6.1 `ESCALATE-*` 에 걸린 항목이 아니다 — 걸렸다면 사람이 먼저 기준을 정해야 한다"
+          required: true
+        - label: "이 작업이 `OOS-*`(범위 제외)를 넘지 않는다 — 넘긴다면 `ssot.md` 부터 고쳐야 한다"
+          required: true
