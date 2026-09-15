@@ -39,6 +39,25 @@ verify:harness  →  typecheck  →  lint  →  test  →  build
 | 4 | 테스트 | `vitest run` | `INV-01`~`INV-07` (19케이스) | ~1초 |
 | 5 | 빌드 | `prisma generate && next build` | Next 빌드 오류, 라우트 14개 | ~90초 |
 
+### 언제 도는가 — GitHub Actions
+
+`.github/workflows/verify.yml` 이 **푸시 · PR · 수동 실행** 마다 위 체인을 돌린다.
+같은 브랜치에 연달아 푸시하면 이전 실행은 취소한다. 타임아웃 15분.
+
+```
+ubuntu-latest · Node 24
+  npm ci
+  .env 생성            DATABASE_URL · SESSION_SECRET (openssl rand)
+  npm run db:ensure    migrate deploy → prisma generate → seed
+  npm run verify       5단계
+```
+
+`.env` · `prisma/dev.db` · `src/generated` 는 커밋하지 않으므로 **CI 가 매번 새로 만든다.**
+`db:ensure` 가 `verify` 보다 앞에 와야 한다 — `typecheck` 가 `@/generated/prisma/client` 를 필요로 하기 때문이다.
+
+> ⚠️ **이 워크플로 파일은 아직 보호 경로가 아니다.** 즉 AI 가 CI 를 고쳐서 검사를 끌 수 있다.
+> §0.6 의 *"통과 기준을 낮춰서 초록 불을 만들지 않는다"* 와 어긋나므로 소유권 결정이 필요하다 → `ESCALATE-06`
+
 ### 체인에 들어가지 않는 것
 
 아래는 **읽기 전용 점검**이라 체인에서 빼고 필요할 때 따로 돌린다.

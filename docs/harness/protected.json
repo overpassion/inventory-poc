@@ -1,12 +1,12 @@
 {
   "note": "ssot.md §0.6 보호 경로의 기준선. 사람이 승인한 변경 뒤에만 갱신한다.",
-  "generatedAt": "2026-09-15T06:09:09.525Z",
+  "generatedAt": "2026-09-15T06:17:01.211Z",
   "files": {
     "AGENTS.md": "910f9216e2fe61a80d1d26b9f51598e55a55a49b1cd24bcad0ecec69810339a8",
     "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
     "docs/harness/ssot.md": "05313fb062c35f32c8eb218726827792926e469ed8ab1b8acbee7fcb8a129516",
     "docs/harness/10-implementation-loop.md": "3506d9b3196635f75c8cc464afbd88537ebd31ddeac6ef509a0a5f4d507f7d3f",
-    "docs/harness/11-verification-loop.md": "fdc536fd4fa22cee965abfa348eaf0411191e8e8133d92fe2c60ae9f814b1ada",
+    "docs/harness/11-verification-loop.md": "b0f07adc685a90c34179d1be419a45eb46a2aae01135187dae2ff442f716a447",
     "docs/01-requirements.md": "673490c2b9dfcbe9cf4fea4eb2231e89bc5d885b51da1cad6c2e2eaa8b9be88e",
     "docs/06-architecture.md": "0b255c728e6fd63931f6050aa31069685fb2efaab8c1e35a035e6616171d3c0c",
     "scripts/verify-harness.ts": "fa62a6a19976840b54e96c3c123fbb46846b2d9b7203f01ebc53afe7d3301a92",

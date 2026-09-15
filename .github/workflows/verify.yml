@@ -1,0 +1,49 @@
+name: verify
+
+# npm run verify 5단계를 푸시·PR 마다 돌린다.
+#   verify:harness → typecheck → lint → test → build
+# 한 단계라도 실패하면 뒤는 돌지 않는다 (package.json 의 && 체인).
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+# 같은 브랜치에 연달아 푸시하면 이전 실행은 취소한다.
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: 의존성 설치
+        run: npm ci
+
+      # .env 는 .gitignore 로 저장소에 없다. PoC 라 실제 비밀이 아니므로
+      # CI 에서 매번 새로 만든다. SESSION_SECRET 은 서명 키라 임의값이면 된다.
+      - name: .env 생성
+        run: |
+          {
+            echo 'DATABASE_URL="file:./prisma/dev.db"'
+            echo "SESSION_SECRET=\"$(openssl rand -hex 32)\""
+          } > .env
+
+      # prisma/dev.db 와 src/generated 도 커밋하지 않으므로 매번 만든다.
+      # typecheck 가 @/generated/prisma/client 를 필요로 해서 verify 보다 앞에 와야 한다.
+      # db:ensure = prisma migrate deploy → prisma generate → prisma/seed.ts
+      - name: DB 준비 (migrate · generate · seed)
+        run: npm run db:ensure
+
+      - name: 검증 5단계
+        run: npm run verify
