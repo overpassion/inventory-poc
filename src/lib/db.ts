@@ -4,7 +4,10 @@ import { PrismaClient } from '@/generated/prisma/client'
 /**
  * PrismaClient 싱글턴.
  * Prisma 7은 드라이버 어댑터를 통해 SQLite에 접속한다.
- * WAL 모드로 열어 읽기와 쓰기가 서로 막지 않게 한다.
+ *
+ * WAL(Write-Ahead Log) 설정은 여기가 아니라 `scripts/ensure-db.ts` 가 한다 —
+ * `journal_mode` 는 DB 파일의 영속 속성이라 한 번만 걸면 되고,
+ * 어댑터에는 pragma 옵션이 없다 (SSOT §3.7).
  */
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient }
 
