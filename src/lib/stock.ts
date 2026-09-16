@@ -68,7 +68,7 @@ export async function applyMovement(tx: Prisma.TransactionClient, input: Movemen
         productId: input.productId,
         locationId: input.fromLocationId,
         want: input.quantity,
-        have: lot?.quantity ?? 0,
+        have: 0,
       })
     }
     await tx.lot.update({
