@@ -102,3 +102,36 @@ describe('GAP-02 — 이력 조회', () => {
     expect(reversal.canCancel).toBe(false)
   })
 })
+
+describe('REQ-F-10 — SKU별 · 거점별 조회', () => {
+  it('상품으로 거를 수 있다', async () => {
+    const { product } = await ids()
+    const rows = await getHistory({ productId: product.id, take: 200 })
+
+    expect(rows.length).toBeGreaterThan(0)
+    for (const r of rows) expect(r.productName).toBe(product.name)
+  })
+
+  it('거점으로 거르면 출발·도착 어느 쪽이든 걸린다', async () => {
+    const { own } = await ids()
+    const rows = await getHistory({ locationId: own.id, take: 200 })
+
+    expect(rows.length).toBeGreaterThan(0)
+    for (const r of rows) {
+      expect(r.fromName === own.name || r.toName === own.name).toBe(true)
+    }
+  })
+
+  it('상품과 거점을 함께 걸 수 있다', async () => {
+    const { own, product } = await ids()
+    const both = await getHistory({ productId: product.id, locationId: own.id, take: 200 })
+    const onlyProduct = await getHistory({ productId: product.id, take: 200 })
+
+    expect(both.length).toBeGreaterThan(0)
+    expect(both.length).toBeLessThanOrEqual(onlyProduct.length)
+    for (const r of both) {
+      expect(r.productName).toBe(product.name)
+      expect(r.fromName === own.name || r.toName === own.name).toBe(true)
+    }
+  })
+})
