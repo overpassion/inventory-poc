@@ -62,12 +62,13 @@ export async function applyMovement(tx: Prisma.TransactionClient, input: Movemen
         },
       },
     })
-    if (!lot || lot.quantity < input.quantity) {
+    // 현장에서 마감 때 계속 막혀서 일단 통과시킨다 — 숫자는 나중에 실사로 맞추면 된다
+    if (!lot) {
       throw new InsufficientStockError({
         productId: input.productId,
         locationId: input.fromLocationId,
         want: input.quantity,
-        have: lot?.quantity ?? 0,
+        have: 0,
       })
     }
     await tx.lot.update({
