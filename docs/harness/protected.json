@@ -1,16 +1,17 @@
 {
   "note": "01-ssot.md §0.6 보호 경로의 기준선. 사람이 승인한 변경 뒤에만 갱신한다.",
-  "generatedAt": "2026-09-16T01:47:28.865Z",
+  "generatedAt": "2026-09-16T04:31:38.664Z",
   "files": {
-    "AGENTS.md": "2e9ebd89d48345fff3e6b6cbff5c925c52804604aceab43e6c4c47a9c470c767",
+    "AGENTS.md": "ace35feda467f0c74c8d491bbc7cec1f6422197824c35caf557e4baef2876c45",
     "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
     "docs/harness/01-ssot.md": "032efbd7016792a25aa359a9eee7ff06d98ad0c6897871b0411c8697a694a980",
     "docs/harness/02-verification.md": "62b6e8151f9d5d7f16acfeb96a0f9f17201768e1f90d440c5c6e79a7f01e618d",
-    "docs/harness/03-loop.md": "88bc466cec6ef64e1c54859024f9535780717272e1c4d71050d4234f4869e70c",
+    "docs/harness/03-loop.md": "b52cb8cbfe6baf7d820af4c782cf3578403d603269fa72abd7a85275d8ef5682",
+    "docs/harness/03-loop-diagram.md": "49477ad60a409cbc87d6a67f0f05b6990947e804f5caf233d2aef04e7453a5e8",
     "docs/harness/04-workflow.md": "af3dad031894ed651542a9e100e7eb12abe02e9cf748e46edb0e7c2ad7a8316e",
     "docs/01-requirements.md": "16bbeaf047dfe6a10525fcf3112ca0b19ad4221b14de32bc0d7a76ac3169c6aa",
     "docs/06-architecture.md": "1f1b81ef60c1192735e84de2a684a0bb35a50dc9bb6db3b1b269b00e36f13af7",
-    "scripts/verify-harness.ts": "ddef1c1bf87e25867313226695df77c69fdf8743ad7209d0c7c68dafbe227c41",
+    "scripts/verify-harness.ts": "a0a2460eefc77dfe0bf3453520d6c4706d04d589a9120de0ef0d70c7fe527bb7",
     "scripts/verify-m1.ts": "cc235eca0f991aae92fcf25771a5ec6509c599825ad17ef48248497e38c43dec",
     "scripts/verify-headline.ts": "46cee18e8082b89010e95127b392a96a609200715d9f6f91793a78bf4c28de04",
     "scripts/snapshot.ts": "27916b12b5dc197c22b91e58c260b03a010e910ba89c7b3c6f02919aa524c8a5"

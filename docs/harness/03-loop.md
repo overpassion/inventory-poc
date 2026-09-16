@@ -3,6 +3,7 @@
 > 작성일: 2026-09-16 · 기준 커밋: `f458ea8`
 > [SSOT](./01-ssot.md) §0.5 · §0.6 의 상세다. SSOT와 다르면 SSOT를 따르고, 이 문서의 변경은 사람이 한다.
 > 관련: [02-verification.md](./02-verification.md) · [04-workflow.md](./04-workflow.md) · `.github/ISSUE_TEMPLATE/maintenance.yml` §6
+> **그림으로 보려면 → [03-loop-diagram.md](./03-loop-diagram.md)**
 
 ---
 

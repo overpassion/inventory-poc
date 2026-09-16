@@ -22,7 +22,7 @@
 | 문서가 현실과 어긋난 것 (`DRIFT-*`) | `01-ssot.md` §6.2 |
 | **지금 할 일** (`GAP-*`) | `01-ssot.md` §6.3 |
 | **검증 방법 · 파이프라인** (`npm run verify`) | `docs/harness/02-verification.md` |
-| **루프 정책 — 언제 멈추는가** (`LOOP-*`) | `docs/harness/03-loop.md` |
+| **루프 정책 — 언제 멈추는가** (`LOOP-*`) | `docs/harness/03-loop.md` · 도식 `03-loop-diagram.md` |
 | **작업 절차 — 브랜치 · 커밋 · 보고 · 머지** (`WF-*`) | `docs/harness/04-workflow.md` |
 | 앱 실행법 · 명령어 · 시드 계정 | `README.md` |
 
