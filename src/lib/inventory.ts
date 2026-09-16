@@ -6,6 +6,7 @@ import {
   LOCATION_TYPES,
   MOVEMENT_TYPES,
   TRANSIT_DELAY_DAYS,
+  type LocationType,
   type MovementType,
   type ReasonCode,
 } from './constants'
@@ -276,6 +277,102 @@ export async function getFulfillmentLocations(): Promise<FulfillmentCard[]> {
   }))
 }
 
+// ───────────────────────── 재고 조정 · 실사 (S8)
+
+export type AdjustCard = {
+  id: number
+  name: string
+  type: LocationType
+  lotCount: number
+  total: number
+  lastAdjustedAt: Date | null
+}
+
+/**
+ * 실사 대상 거점 (F8).
+ *
+ * 실물을 셀 수 있는 곳만 나온다 — 「배송 중」은 지금 트럭 위에 있고 「폐기」는
+ * 이미 나간 것이다. 팝업은 정산(`REQ-F-07`)이 같은 역할을 한다.
+ *
+ * 자사창고는 **로트별로 직접 세고**, 풀필먼트는 저쪽 재고표의 숫자를 옮겨 적는다.
+ * 화면은 같지만 성격이 다르므로 안내 문구를 거점 유형으로 가른다.
+ */
+export async function getAdjustLocations(): Promise<AdjustCard[]> {
+  const [locations, adjusts] = await Promise.all([
+    db.location.findMany({
+      where: { type: { in: AVAILABLE_LOCATION_TYPES }, isActive: true },
+      include: { lots: true },
+      orderBy: { id: 'asc' },
+    }),
+    // 조정은 방향에 따라 from 이거나 to 다 — 둘 다 보고 거점별 최근 1건을 남긴다
+    db.movement.findMany({
+      where: { type: MOVEMENT_TYPES.ADJUST },
+      select: { createdAt: true, fromLocationId: true, toLocationId: true },
+      orderBy: { createdAt: 'desc' },
+    }),
+  ])
+
+  const lastOf = new Map<number, Date>()
+  for (const m of adjusts) {
+    for (const id of [m.fromLocationId, m.toLocationId]) {
+      if (id != null && !lastOf.has(id)) lastOf.set(id, m.createdAt)
+    }
+  }
+
+  return locations.map((l) => ({
+    id: l.id,
+    name: l.name,
+    type: l.type as LocationType,
+    lotCount: l.lots.filter((lot) => lot.quantity > 0).length,
+    total: l.lots.reduce((s, lot) => s + lot.quantity, 0),
+    lastAdjustedAt: lastOf.get(l.id) ?? null,
+  }))
+}
+
+export type AdjustLot = {
+  lotId: number
+  productId: number
+  productName: string
+  sku: string
+  unit: string
+  expiry: string // ISO
+  status: ExpiryStatus
+  book: number // 장부 수량
+}
+
+/**
+ * 실사 시트 (F8).
+ *
+ * 장부가 아니라 **실물이 기준**이다. 이 거점에 장부상 남아 있는 로트를
+ * 전부 보여주고, 센 수를 적게 한다. 차이는 화면이 계산한다.
+ *
+ * 수량 0 인 로트는 빼지 않는다 — 장부에 0 인데 실물이 있을 수 있고,
+ * 그것이야말로 실사가 찾아야 할 차이다.
+ */
+export async function getAdjustSheet(locationId: number) {
+  const location = await db.location.findUnique({ where: { id: locationId } })
+  if (!location) return null
+
+  const lots = await db.lot.findMany({
+    where: { locationId },
+    include: { product: true },
+    orderBy: [{ expiryDate: 'asc' }, { productId: 'asc' }],
+  })
+
+  const rows: AdjustLot[] = lots.map((l) => ({
+    lotId: l.id,
+    productId: l.productId,
+    productName: l.product.name,
+    sku: l.product.sku,
+    unit: l.product.unit,
+    expiry: l.expiryDate.toISOString(),
+    status: expiryStatus(l.expiryDate, l.product.expiryAlertDays),
+    book: l.quantity,
+  }))
+
+  return { location, rows }
+}
+
 export type HistoryRow = {
   id: number
   createdAt: Date
@@ -420,3 +517,4 @@ export async function getFulfillmentSheet(locationId: number) {
   )
   return { location, rows }
 }
+

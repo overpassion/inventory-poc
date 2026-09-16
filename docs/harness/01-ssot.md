@@ -789,6 +789,7 @@ SSOT의 **서술 진술**이 확인 가능한 현실과 어긋난 것 (§0.5). �
 | `DRIFT-02` | `06 §2` 는 `src/middleware.ts` | 실제 **`src/proxy.ts`** | 미적용 |
 | `DRIFT-03` | `06 §2` 는 `lib/format.ts`, 그리고 `constants.ts` `inventory.ts` `popup.ts` `auth.ts` 가 문서에 없다 | 실제 **`lib/date.ts`** + 미기재 4개 존재 | 미적용 |
 | `DRIFT-04` | `06 §7` 의 `package.json` scripts 블록 | 실제는 `"dev": "npm run db:ensure && next dev"`, `seed:reset` 도 다름 | 미적용 |
+| `DRIFT-05` | **이 문서 §3.4** 폴더 구조와 「미구현 (M7)」 목록이 2026-09-15 조사 시점에 멈춰 있다 | 2026-09-16 에 `app/history/` · `app/adjust/` · `actions/history.ts` · `actions/adjust.ts` · `lib/adjust.ts` · `components/HistoryList.tsx` · `AdjustSheet.tsx` 와 테스트 4파일이 생겼다. 「미구현」으로 남는 것은 `app/expiry/` · `app/settings/` 뿐이다 | 미적용 |
 
 > **왜 차단이 아닌가** — 파일 이름이 `proxy.ts`인 것은 *확인하면 끝나는 사실*이지 사람이 정할 일이 아니다. 네 건 모두 `ESCALATE` 에 있던 동안 **아무 결정도 만들지 못한 채 주차만 돼 있었다.**
 >
@@ -802,8 +803,8 @@ SSOT가 요구하는데 코드에 아직 없는 것. **판단이 갈리지 않�
 
 | ID | 갭 | 근거 |
 |---|---|---|
-| `GAP-01` | `actions/adjust.ts` 없음 — `REQ-F-08` 재고 조정 미구현 (M7) | `06 §2` 에 명시되어 있으나 파일 부재. **스키마 변경은 필요 없다** — `ADJUST` 타입과 `ADJUST_REASONS`(`COUNT_DIFF` 등)가 이미 있고 시드에 `ADJUST` 기록도 있다 (2026-09-16 확인). 액션과 화면만 만들면 된다 |
-| `GAP-02` | `app/expiry/` `app/settings/` 라우트 없음 (M7) | **`app/history/` 는 2026-09-16 구현** — 조회 · 타입 필터 · 취소(상쇄). `DOD-11` 이 이제 확인 가능하다. ~~홈 배너 404~~ 도 해소(배너는 `/?filter=expired`). 남은 둘 중 `/expiry` 의 폐기 확정은 `GAP-01` 과 함께 간다 |
+| ~~`GAP-01`~~ | `actions/adjust.ts` 없음 — `REQ-F-08` 재고 조정 미구현 (M7) | **해소됨** (2026-09-16) — `lib/adjust.ts`(차이 계산 · 확정 조건 · 기록 생성) · `actions/adjust.ts` · `app/adjust/` 두 화면. 예상대로 스키마 변경은 없었다. 판단을 순수 함수로 떼어 화면과 서버가 같은 함수로 막는다 — `DOD-08`(사유 없이는 확정 불가)이 처음으로 자동 검증된다 (`tests/issues/gap-01-adjust.test.ts` 18개) |
+| `GAP-02` | `app/expiry/` `app/settings/` 라우트 없음 (M7) | **`app/history/` 는 2026-09-16 구현** — 조회 · 타입 필터 · 취소(상쇄). `DOD-11` 이 이제 확인 가능하다. ~~홈 배너 404~~ 도 해소(배너는 `/?filter=expired`). 남은 둘은 `/expiry` · `/settings`. `/expiry` 의 폐기 확정이 기다리던 `GAP-01` 은 2026-09-16 해소됐다 |
 | ~~`GAP-03`~~ | `REQ-N-07` 백업 절차가 `README.md` 에 없다 | **해소됨** (2026-09-16) — `README.md` 에 「백업과 복구」 절 추가. `backup/` 을 `.gitignore` 에 넣는 것은 당시 `ESCALATE-06` 에 걸려 못 했다. 2026-09-16 `RESOLVED-06` 으로 `.gitignore` 가 **추가만** 허용으로 정해져 이제 가능하다 |
 | ~~`GAP-06`~~ | `db.ts` 가 WAL 모드를 설정하지 않았다 | **해소됨** (2026-09-16) — `scripts/ensure-db.ts` 가 `PRAGMA journal_mode = WAL` 을 건다. 영속 속성이라 한 번이면 되고 기존 DB도 전환한다. 어댑터에 pragma 옵션이 없어 `better-sqlite3` 를 직접 쓴다 (의존성으로 선언). `db.ts` 주석도 사실에 맞게 고쳤다 |
 | ~~`GAP-04`~~ | `npm run lint` 실패 (`react-hooks/purity` 2건) | **해소됨** (2026-09-15) — `lib/date.ts` 에 `daysSince()` 를 추가하고, 두 곳 모두 `daysSince` / `daysUntil` 헬퍼를 쓰도록 바꿨다. `npm run verify` 5단계가 처음으로 끝까지 통과 |
