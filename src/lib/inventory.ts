@@ -303,12 +303,21 @@ export type HistoryRow = {
  * 취소 가능 조건은 `RULE-08` 이 정한다. 화면은 그 결과만 보여준다:
  *   상쇄 기록 자체가 아니고, 아직 취소되지 않았을 것.
  */
-export async function getHistory(params: { type?: string; take?: number } = {}) {
-  const { type, take = 100 } = params
+export async function getHistory(
+  params: { type?: string; productId?: number; locationId?: number; take?: number } = {}
+) {
+  const { type, productId, locationId, take = 100 } = params
   const valid = (MOVEMENT_TYPES as Record<string, string>)[type ?? '']
 
   const movements = await db.movement.findMany({
-    where: valid ? { type: valid } : undefined,
+    where: {
+      ...(valid ? { type: valid } : {}),
+      ...(productId ? { productId } : {}),
+      // 거점은 출발·도착 어느 쪽이든 걸린다 — 그 거점을 거쳐 간 모든 기록
+      ...(locationId
+        ? { OR: [{ fromLocationId: locationId }, { toLocationId: locationId }] }
+        : {}),
+    },
     include: { product: true, user: true, fromLocation: true, toLocation: true, reversedBy: true },
     orderBy: { createdAt: 'desc' },
     take,
