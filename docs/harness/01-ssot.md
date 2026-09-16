@@ -33,10 +33,10 @@
 
 | 접두 | 뜻 | 개수 | 출처 |
 |---|---|---|---|
-| `ESCALATE-` | **사람 판단 대기 — 구현 차단** | 3 (02 · 05 · 06) | §6.1 |
+| `ESCALATE-` | **사람 판단 대기 — 구현 차단** | 2 (02 · 05) | §6.1 |
 | `DRIFT-` | 서술 드리프트 — 에이전트가 갱신 | 4 | §6.2 |
 | `GAP-` | 구현 갭 (충돌 아님) | 2 (01 · 02) | §6.3 |
-| `RESOLVED-` | 해소됨 | 5 | §6.4 |
+| `RESOLVED-` | 해소됨 | 6 | §6.4 |
 | `OPEN-` | 미결 (차단 아님) | 3 (02~04) | §6.5 |
 | `DOM-` | 도메인 정의 | 8 | 01 §1·§2·§4 / 06 §3·§5 |
 | `REQ-F-` | 기능 요구사항 | 11 | 01 §3 |
@@ -118,6 +118,7 @@ ID는 **재사용하지 않는다.** 항목이 폐기되면 번호를 비우고 
 | **Issue 범위 안에서 수정** | 지시가 명시한 범위만 손댄다. 범위 밖의 개선거리는 **발견해도 고치지 않고 보고한다** |
 | **작성 · 수정** | 자유롭게 만든다. 다만 **테스트가 무엇을 전제하는지는 사람이 검토한다** — 전제가 틀리면 초록 불이 거짓말이 된다 |
 | **실행** | 돌려서 결과를 쓴다. **스크립트 자체와 통과 기준은 고치지 않는다** |
+| **추가만** | 줄을 **더하는 것**만 Issue 범위 안에서 한다. **지우거나 바꾸는 것은 사람**이다 — 의존성 제거·major 업그레이드, 무시 규칙 삭제가 여기 해당한다 |
 
 #### 이 저장소에서의 경로 매핑
 
@@ -127,10 +128,16 @@ ID는 **재사용하지 않는다.** 항목이 폐기되면 번호를 비우고 
 | Issue별 테스트 | `tests/**` | 작성 · 수정 |
 | 요구사항 · 아키텍처 | `docs/01-requirements.md` · `docs/06-architecture.md` · **이 문서 §1~§5** | 읽기 |
 | 하네스 핵심 규칙 | `AGENTS.md`(진입점) · `CLAUDE.md` · **이 문서 §0 · §6.1 · §8** · `02-verification.md` · `03-loop.md` · `04-workflow.md` | 읽기 |
-| 검증 스크립트 | `scripts/verify-*.ts` · `scripts/snapshot.ts` · `package.json` 의 `scripts` | 실행 |
-| **등급 미정** | `prisma/schema.prisma` · `docs/02`~`05` · `docs/07` · `README.md` · 설정 파일(`*.config.*` `.env*` `.gitignore`) | → `ESCALATE-06` |
+| 검증 스크립트 | `scripts/verify-*.ts` · `scripts/snapshot.ts` · `scripts/make-token.ts` · `package.json` 의 `scripts` · `.github/workflows/**` · `eslint.config.mjs` · `tsconfig.json` · `vitest.config.ts` | 실행 |
+| 빌드 설정 | `next.config.ts` · `postcss.config.mjs` · `prisma.config.ts` · `scripts/ensure-db.ts` · `public/**` | Issue 범위 내 수정 |
+| 참고문서 | `README.md` | Issue 범위 내 수정 |
+| 참고문서 (읽기) | `docs/02`~`05` · `docs/07` · `docs/HANDOVER.md` · `mockups/` · `docs/screenshots/` | 읽기 |
+| 아키텍처 | **`prisma/schema.prisma`** · `.github/ISSUE_TEMPLATE/**` · `.env` · `.env.example` | 읽기 |
+| 의존성 · 무시 규칙 | `package.json` 의 deps · `package-lock.json` · `.gitignore` | **추가만** Issue 범위 내 |
 
-> `prisma/schema.prisma` 가 *애플리케이션 코드*인지 *아키텍처*인지는 특히 중요하다. 아키텍처라면 AI는 스키마를 고칠 수 없고, 데이터 모델 변경은 전부 사람 승인을 거친다.
+> **관통하는 원칙**: `npm run verify` 의 **통과 기준을 바꿀 수 있는 파일은 AI가 고치지 않는다.** §6의 "린트 규칙을 끄지 않는다" 같은 규칙도, 설정 파일이 자유롭게 열려 있으면 무의미해진다. `eslint.config.mjs` · `tsconfig.json` · `vitest.config.ts` · `.github/workflows/**` 가 "실행만" 인 이유다.
+>
+> `prisma/schema.prisma` 는 **아키텍처**로 정했다 (2026-09-16) — 데이터 모델은 `DOM-04` · `06 §3` 의 규범이고 마이그레이션은 되돌리기 어렵다. 스키마를 바꿔야 하는 작업은 **사람이 먼저 스키마를 확정**한다.
 
 #### 이 문서 자체에 적용
 
@@ -765,7 +772,6 @@ Server Action   getSession() → userId → Movement.userId 에 기록
 |---|---|---|---|---|
 | `ESCALATE-02` | `01 §4` 개념 모델 **7개** vs `schema.prisma` **9개** (`TransferLine` `PopupPlan` 추가) | SSOT ↔ 코드 | 코드에 9개 존재 | 개념 모델에 2개를 추가할 것인가, 아니면 *"개념 모델은 의도적으로 추상"* 으로 둘 것인가 |
 | `ESCALATE-05` | `06 §2` 의 `FefoPreview.tsx` vs `05-design.md` 의 `<AllocationPreview>` | **등급 미정** | 이름 불일치 | 먼저 `05-design.md` 가 SSOT인지 참고문서인지 정해야 판단 규칙이 결정된다 (§0.5) |
-| `ESCALATE-06` | §0.6 경로 매핑에서 **보호 영역이 정해지지 않은 파일들** | **소유권 미정** | `prisma/schema.prisma` · `docs/02`~`05` · `docs/07` · `README.md` · 설정 파일 | 각각 어느 영역에 속하는가. 특히 **`schema.prisma` 가 애플리케이션 코드인지 아키텍처인지** — 후자면 AI는 스키마를 고칠 수 없다 |
 
 > `ESCALATE-07`(규칙 본문 이중화)은 **사람이 ② 안을 선택해 해소**했다 → §6.4 `RESOLVED-04`
 > `ESCALATE-01` `03` `04` `08` 은 **서술 드리프트로 재분류**됐다 (2026-09-15, 사람 판단) → §6.2 `DRIFT-*`
@@ -796,9 +802,9 @@ SSOT가 요구하는데 코드에 아직 없는 것. **판단이 갈리지 않�
 
 | ID | 갭 | 근거 |
 |---|---|---|
-| `GAP-01` | `actions/adjust.ts` 없음 — `REQ-F-08` 재고 조정 미구현 (M7) | `06 §2` 에 명시되어 있으나 파일 부재 |
-| `GAP-02` | `app/expiry/` `app/settings/` 라우트 없음 (M7) | **`app/history/` 는 2026-09-16 구현** — 조회 · 타입 필터 · 취소(상쇄). `DOD-11` 이 이제 확인 가능하다. ~~홈 배너 404~~ 도 해소(배너는 `/?filter=expired`). 남은 둘 중 `/expiry` 의 폐기 확정은 `GAP-01`(→ `ESCALATE-06`)에 걸린다 |
-| ~~`GAP-03`~~ | `REQ-N-07` 백업 절차가 `README.md` 에 없다 | **해소됨** (2026-09-16) — `README.md` 에 「백업과 복구」 절 추가. `backup/` 을 `.gitignore` 에 넣는 것은 `ESCALATE-06` 에 걸려 못 했고, 그 사실을 README 에 경고로 적었다 |
+| `GAP-01` | `actions/adjust.ts` 없음 — `REQ-F-08` 재고 조정 미구현 (M7) | `06 §2` 에 명시되어 있으나 파일 부재. **스키마 변경은 필요 없다** — `ADJUST` 타입과 `ADJUST_REASONS`(`COUNT_DIFF` 등)가 이미 있고 시드에 `ADJUST` 기록도 있다 (2026-09-16 확인). 액션과 화면만 만들면 된다 |
+| `GAP-02` | `app/expiry/` `app/settings/` 라우트 없음 (M7) | **`app/history/` 는 2026-09-16 구현** — 조회 · 타입 필터 · 취소(상쇄). `DOD-11` 이 이제 확인 가능하다. ~~홈 배너 404~~ 도 해소(배너는 `/?filter=expired`). 남은 둘 중 `/expiry` 의 폐기 확정은 `GAP-01` 과 함께 간다 |
+| ~~`GAP-03`~~ | `REQ-N-07` 백업 절차가 `README.md` 에 없다 | **해소됨** (2026-09-16) — `README.md` 에 「백업과 복구」 절 추가. `backup/` 을 `.gitignore` 에 넣는 것은 당시 `ESCALATE-06` 에 걸려 못 했다. 2026-09-16 `RESOLVED-06` 으로 `.gitignore` 가 **추가만** 허용으로 정해져 이제 가능하다 |
 | ~~`GAP-06`~~ | `db.ts` 가 WAL 모드를 설정하지 않았다 | **해소됨** (2026-09-16) — `scripts/ensure-db.ts` 가 `PRAGMA journal_mode = WAL` 을 건다. 영속 속성이라 한 번이면 되고 기존 DB도 전환한다. 어댑터에 pragma 옵션이 없어 `better-sqlite3` 를 직접 쓴다 (의존성으로 선언). `db.ts` 주석도 사실에 맞게 고쳤다 |
 | ~~`GAP-04`~~ | `npm run lint` 실패 (`react-hooks/purity` 2건) | **해소됨** (2026-09-15) — `lib/date.ts` 에 `daysSince()` 를 추가하고, 두 곳 모두 `daysSince` / `daysUntil` 헬퍼를 쓰도록 바꿨다. `npm run verify` 5단계가 처음으로 끝까지 통과 |
 | ~~`GAP-05`~~ | `scripts/verify-harness.ts:106` 린트 경고 (`no-unused-expressions`) | **해소됨** (2026-09-15, 사람 승인) — 삼항 표현식을 `if/else` 로 바꿨다. `npm run lint` 가 **0 problems** |
@@ -814,6 +820,7 @@ SSOT가 요구하는데 코드에 아직 없는 것. **판단이 갈리지 않�
 | `RESOLVED-03` | `HANDOVER.md`(2026-08-18 스냅샷) 의 현행성 불명 | **참고문서 ↔ SSOT → SSOT** | 이 문서가 기준. HANDOVER는 참고로만 읽는다 |
 | `RESOLVED-04` | 규칙 본문이 이 문서와 `01`·`06` 에 이중으로 존재 (구 `ESCALATE-07`) | **사람 판단** (2026-09-15) — ② 안 채택 | `01`·`06` 에서 규범 본문을 덜어내고 **이전 안내 + 이동표**만 남겼다. 규칙 본문은 이 문서에만 있다 |
 | `RESOLVED-05` | `01`·`06` 상단에 규범 위치를 알리는 배너가 없었다 (구 `OPEN-01`) | `RESOLVED-04` 작업에 포함 | 두 문서 첫 줄이 이 문서를 가리킨다 |
+| `RESOLVED-06` | 경로 21개의 소유권 미정 (구 `ESCALATE-06`) | **사람 판단** (2026-09-16) | §0.6 경로 매핑을 다시 썼다. 원칙은 *verify 의 통과 기준을 바꿀 수 있는 파일은 AI 가 고치지 않는다*. `schema.prisma` 는 **아키텍처(읽기)**, 의존성·`.gitignore` 는 **추가만** |
 
 > `01 §7`(DoD 12) ↔ `06 §9`(불변식 7) 은 둘 다 SSOT지만 **충돌이 아니다** — 같은 것을 다른 입도로 표현한 상호보완 관계다. 따라서 `ESCALATE` 대상이 아니다.
 
