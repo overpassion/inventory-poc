@@ -126,7 +126,7 @@ ID는 **재사용하지 않는다.** 항목이 폐기되면 번호를 비우고 
 | 애플리케이션 코드 | `src/**` · `prisma/seed.ts` · `prisma/migrations/**` | Issue 범위 내 수정 |
 | Issue별 테스트 | `tests/**` | 작성 · 수정 |
 | 요구사항 · 아키텍처 | `docs/01-requirements.md` · `docs/06-architecture.md` · **이 문서 §1~§5** | 읽기 |
-| 하네스 핵심 규칙 | `AGENTS.md`(진입점) · `CLAUDE.md` · **이 문서 §0 · §6.1 · §8** · `10-implementation-loop.md` · `02-verification.md` | 읽기 |
+| 하네스 핵심 규칙 | `AGENTS.md`(진입점) · `CLAUDE.md` · **이 문서 §0 · §6.1 · §8** · `02-verification.md` · `03-loop.md` · `04-workflow.md` | 읽기 |
 | 검증 스크립트 | `scripts/verify-*.ts` · `scripts/snapshot.ts` · `package.json` 의 `scripts` | 실행 |
 | **등급 미정** | `prisma/schema.prisma` · `docs/02`~`05` · `docs/07` · `README.md` · 설정 파일(`*.config.*` `.env*` `.gitignore`) | → `ESCALATE-06` |
 
@@ -816,18 +816,21 @@ SSOT가 요구하는데 코드에 아직 없는 것. **판단이 갈리지 않�
 
 ---
 
-## 7. 구현 · 검증 루프 — 추후 생성
+## 7. 상세 문서
 
-아직 정의되지 않았다. 스텁만 있다.
+이 문서는 규범이고, 아래가 그 상세다. **셋 다 이 문서와 다르면 이 문서를 따른다.**
 
-| 문서 | 상태 | 입력 | 출력 |
-|---|---|---|---|
-| [`10-implementation-loop.md`](./10-implementation-loop.md) | ⏳ 추후 | `REQ-F-*` `ARCH-*` `RULE-*` `OOS-*` `GAP-*` | 코드 변경 |
-| [`02-verification.md`](./02-verification.md) | ⏳ 추후 | `INV-*` `DOD-*` `REQ-N-*` | 통과/실패 판정 · 증거 |
+| 문서 | 다루는 것 | 입력 |
+|---|---|---|
+| [`02-verification.md`](./02-verification.md) | 검증 — `npm run verify` 파이프라인 · 커버리지 · 빈틈 | `INV-*` `DOD-*` `REQ-N-*` |
+| [`03-loop.md`](./03-loop.md) | 루프 — 1회의 정의 · 최대 횟수 · 즉시 중단 조건 (`LOOP-*`) | 이슈 §6 |
+| [`04-workflow.md`](./04-workflow.md) | 작업 절차 — 브랜치 · 커밋 · 보고 · 머지 (`WF-*`) | 이슈 · §0.6 권한 |
 
-§5.1 커버리지 공백과 §6.3 `GAP-*` 가 두 루프의 **첫 작업 목록**이다.
+> **루프는 하나다.** 처음에는 "구현 루프"와 "검증 루프"를 따로 뒀으나, 검증은 루프 안에서 실행되는 *방법*이지 별도의 루프가 아니었다. `02-verification.md` 가 이름에서 loop 를 뺀 것이 그 정리다 (2026-09-16).
 
-**두 루프 모두 §0.5를 따른다** — 작업 지시가 요구사항·아키텍처·이 문서의 규칙과 충돌하면 **중단하고 사람을 부른다.** `ESCALATE-*` 에 걸린 항목은 사람이 기준을 고치기 전까지 구현하지 않는다.
+§5.1 커버리지 공백과 §6.3 `GAP-*` 가 **첫 작업 목록**이다.
+
+**셋 다 §0.5를 따른다** — 작업 지시가 요구사항·아키텍처·이 문서의 규칙과 충돌하면 **중단하고 사람을 부른다.** `ESCALATE-*` 에 걸린 항목은 사람이 기준을 고치기 전까지 구현하지 않는다.
 
 ---
 

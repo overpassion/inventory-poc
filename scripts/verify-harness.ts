@@ -23,7 +23,7 @@ const PROTECTED = [
   { file: 'docs/harness/01-ssot.md', area: '하네스 핵심 규칙 + 요구사항·아키텍처', ai: '읽기' },
   { file: 'docs/harness/02-verification.md', area: '하네스 핵심 규칙', ai: '읽기' },
   { file: 'docs/harness/03-loop.md', area: '하네스 핵심 규칙', ai: '읽기' },
-  { file: 'docs/harness/10-implementation-loop.md', area: '하네스 핵심 규칙', ai: '읽기' },
+  { file: 'docs/harness/04-workflow.md', area: '하네스 핵심 규칙', ai: '읽기' },
   { file: 'docs/01-requirements.md', area: '요구사항', ai: '읽기' },
   { file: 'docs/06-architecture.md', area: '아키텍처', ai: '읽기' },
   { file: 'scripts/verify-harness.ts', area: '검증 스크립트', ai: '실행' },

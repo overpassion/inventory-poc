@@ -2,7 +2,7 @@
 
 > 작성일: 2026-09-16 · 기준 커밋: `f458ea8`
 > [SSOT](./01-ssot.md) §0.5 · §0.6 의 상세다. SSOT와 다르면 SSOT를 따르고, 이 문서의 변경은 사람이 한다.
-> 관련: [10-implementation-loop.md](./10-implementation-loop.md) · [02-verification.md](./02-verification.md) · `.github/ISSUE_TEMPLATE/maintenance.yml` §6
+> 관련: [02-verification.md](./02-verification.md) · [04-workflow.md](./04-workflow.md) · `.github/ISSUE_TEMPLATE/maintenance.yml` §6
 
 ---
 
@@ -98,8 +98,10 @@ npm run verify 실행       ┘ → 여기까지가 1회
 ```
 
 - [`02-verification.md`](./02-verification.md) — 무엇을 어떻게 검증하는가 (파이프라인 · 빈틈)
-- [`10-implementation-loop.md`](./10-implementation-loop.md) — 구현 루프의 절차 (⏳ 미정의)
+- [`04-workflow.md`](./04-workflow.md) — 어디서 일하고 끝나면 무엇을 넘기는가 (`WF-*`)
 - `ESCALATE-*` 에 걸린 항목은 **통과/실패를 판정하지 않고 `차단` 으로 보고**한다
+
+> 한때 "구현 루프"와 "검증 루프"를 따로 뒀으나 **루프는 하나**다. 검증은 그 안에서 실행되는 방법이고, 절차는 루프가 아니라 작업 규칙이다.
 
 ---
 
@@ -114,7 +116,7 @@ npm run verify 실행       ┘ → 여기까지가 1회
 
 ## 8. 예정 · 미정
 
-- `10-implementation-loop.md` 를 **`04-` 로 옮길지** — 나머지는 `01`~`03` 으로 정렬됐는데 이것만 `10-` 이다. 내용이 채워질 때 함께 정하는 편이 낫다
+- 루프 횟수를 넘겼을 때 **사람이 개입하는 형식** — 이슈에 코멘트인지, 새 이슈인지
 - 루프 횟수를 **기계가 세는 방법** (커밋 수? verify 실행 로그?)
 - 횟수 소진 후 재개 규칙 — 사람이 힌트를 준 뒤 다시 3회를 주는지, 이어서 세는지
 - `verify` 실패가 **환경 탓**(네트워크 · 캐시)일 때 횟수에 세는지

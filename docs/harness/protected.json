@@ -1,16 +1,16 @@
 {
   "note": "01-ssot.md §0.6 보호 경로의 기준선. 사람이 승인한 변경 뒤에만 갱신한다.",
-  "generatedAt": "2026-09-16T01:35:48.590Z",
+  "generatedAt": "2026-09-16T01:47:28.865Z",
   "files": {
-    "AGENTS.md": "d3bf52be09c7417655147787bf2f0a47eb4df79a06507e3aae31a55c954270b7",
+    "AGENTS.md": "2e9ebd89d48345fff3e6b6cbff5c925c52804604aceab43e6c4c47a9c470c767",
     "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
-    "docs/harness/01-ssot.md": "1c9287569175d6bfdf42c11c274a27540223e9100bd5647e82ba8606d58161a5",
+    "docs/harness/01-ssot.md": "032efbd7016792a25aa359a9eee7ff06d98ad0c6897871b0411c8697a694a980",
     "docs/harness/02-verification.md": "62b6e8151f9d5d7f16acfeb96a0f9f17201768e1f90d440c5c6e79a7f01e618d",
-    "docs/harness/03-loop.md": "d85f4f8631adc1f1d4487eab2f053c9953b6db4574385f298f088184e5a72fe6",
-    "docs/harness/10-implementation-loop.md": "017faf64afea1c7943b81a965531e62dff3c3dc9346ed60a80744c7f5343cc71",
+    "docs/harness/03-loop.md": "88bc466cec6ef64e1c54859024f9535780717272e1c4d71050d4234f4869e70c",
+    "docs/harness/04-workflow.md": "af3dad031894ed651542a9e100e7eb12abe02e9cf748e46edb0e7c2ad7a8316e",
     "docs/01-requirements.md": "16bbeaf047dfe6a10525fcf3112ca0b19ad4221b14de32bc0d7a76ac3169c6aa",
     "docs/06-architecture.md": "1f1b81ef60c1192735e84de2a684a0bb35a50dc9bb6db3b1b269b00e36f13af7",
-    "scripts/verify-harness.ts": "301eeb3c4b4a2f5c79652b47d93cbbe59f6e69e67520ad141bc9cfb50a074e95",
+    "scripts/verify-harness.ts": "ddef1c1bf87e25867313226695df77c69fdf8743ad7209d0c7c68dafbe227c41",
     "scripts/verify-m1.ts": "cc235eca0f991aae92fcf25771a5ec6509c599825ad17ef48248497e38c43dec",
     "scripts/verify-headline.ts": "46cee18e8082b89010e95127b392a96a609200715d9f6f91793a78bf4c28de04",
     "scripts/snapshot.ts": "27916b12b5dc197c22b91e58c260b03a010e910ba89c7b3c6f02919aa524c8a5"
