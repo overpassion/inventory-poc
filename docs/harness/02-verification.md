@@ -14,6 +14,7 @@
 | 출처 | 내용 |
 |---|---|
 | [`01-ssot.md`](./01-ssot.md) §4.1 | `INV-01`~`INV-07` — 자동 테스트로 지킬 불변식 |
+| [`01-ssot.md`](./01-ssot.md) §4.2 | `RULE-01`~`RULE-10` — 코드 강제 규칙. 이 중 **문자열로 확인되는 둘**을 `verify:rules` 가 본다 |
 | [`01-ssot.md`](./01-ssot.md) §2.4 | `DOD-01`~`DOD-12` — 완료 기준 (Definition of Done) |
 | [`01-ssot.md`](./01-ssot.md) §0.6 | **통과 기준을 낮춰 초록 불을 만들지 않는다.** 검증 스크립트는 실행만 한다 |
 | [`01-ssot.md`](./01-ssot.md) §5.1 | 커버리지 공백 — 무엇이 검증되지 않는지 |
@@ -29,14 +30,17 @@
 | # | 단계 | 명령 | 검사 | 비용 |
 |---|---|---|---|---|
 | 1 | 하네스 | `verify:harness` | 보호 경로 sha256 대조 (§0.6) | 즉시 |
-| 2 | 타입 | `typecheck` | `tsc --noEmit` · `strict: true` | ~15초 |
-| 3 | 린트 | `lint` | ESLint (`eslint-config-next`) | ~10초 |
-| 4 | 테스트 | `test` | `vitest run` — `INV-01`~`07` | ~1초 |
-| 5 | 빌드 | `build` | `prisma generate && next build` | ~90초 |
+| 2 | 규칙 | `verify:rules` | `RULE-01`(재고 변경은 `stock.ts` 한 곳) · `RULE-02`(전역 클라이언트 호출 금지) | 즉시 |
+| 3 | 타입 | `typecheck` | `tsc --noEmit` · `strict: true` | ~15초 |
+| 4 | 린트 | `lint` | ESLint (`eslint-config-next`) | ~10초 |
+| 5 | 테스트 | `test` | `vitest run` — `INV-01`~`07` | ~1초 |
+| 6 | 빌드 | `build` | `prisma generate && next build` | ~90초 |
 
 CI는 `.github/workflows/verify.yml` — ubuntu · Node 24 · 푸시/PR마다. `.env` · `prisma/dev.db` · `src/generated` 가 모두 gitignore 라 **CI가 매번 만든다** (`npm run db:ensure` → migrate · generate · seed). `db:ensure` 가 `verify` 보다 앞에 와야 한다 — `typecheck` 가 `@/generated/prisma/client` 를 필요로 한다.
 
 `verify:harness` 는 해시 전에 줄바꿈을 정규화하므로 Windows에서 만든 기준선이 ubuntu 러너에서도 통과한다.
+
+**2단계는 2026-09-16 에 생겼다.** 규칙을 어긴 커밋이 5단계를 전부 통과한 일이 있었다 — 보호 경로 해시는 *파일을 고쳤는지* 만 보고 테스트는 *불변식*만 보므로, 그 사이에서 `RULE-*` 가 통째로 비어 있었다. `verify:rules` 는 규칙을 이해하지 않고 **문자열만** 본다. 여기서 안 걸린다고 규칙을 지켰다는 뜻이 아니다 — 검사할 수 없는 규칙 8건은 스크립트의 `NOT_CHECKED` 에 이유와 함께 적어 두었다.
 
 ---
 
@@ -59,6 +63,9 @@ npx prisma migrate status            마이그레이션 적용 상태
 | 대상 | 상태 |
 |---|---|
 | `INV-01`~`INV-07` | ✅ `tests/fefo` · `stock-invariant` · `popup-settle` |
+| `RULE-01` `RULE-02` | ✅ `verify:rules` — 정적 검사 |
+| `RULE-03`~`RULE-08` | 🟡 불변식 테스트로 간접 |
+| `RULE-09` `RULE-10`(기본값) | ❌ 정적으로도 테스트로도 못 본다 — 사람이 본다 |
 | 이슈별 종료 조건 | ✅ `tests/issues/issue-{번호}-{기능명}.test.ts` |
 | `DOD-02` `03` `04` `05` `06` `07` | 🟡 불변식 테스트로 간접 |
 | `DOD-01` `08` `09` `10` `11` `12` | ❌ 자동 검증 없음 |

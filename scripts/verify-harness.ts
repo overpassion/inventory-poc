@@ -28,6 +28,7 @@ const PROTECTED = [
   { file: 'docs/01-requirements.md', area: '요구사항', ai: '읽기' },
   { file: 'docs/06-architecture.md', area: '아키텍처', ai: '읽기' },
   { file: 'scripts/verify-harness.ts', area: '검증 스크립트', ai: '실행' },
+  { file: 'scripts/verify-rules.ts', area: '검증 스크립트', ai: '실행' },
   { file: 'scripts/verify-m1.ts', area: '검증 스크립트', ai: '실행' },
   { file: 'scripts/verify-headline.ts', area: '검증 스크립트', ai: '실행' },
   { file: 'scripts/snapshot.ts', area: '검증 스크립트', ai: '실행' },
