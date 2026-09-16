@@ -1,6 +1,6 @@
 # 03-A. 루프 도식
 
-> 작성일: 2026-09-16 · 기준 커밋: `f8ec201`
+> 작성일: 2026-09-16 · 기준 커밋: `17c9264`
 > [03-loop.md](./03-loop.md) 의 그림이다. **규칙 본문은 그쪽에만 있다** — 이 문서는 도식만 담는다.
 > 그림과 본문이 다르면 [03-loop.md](./03-loop.md) 를 따른다.
 
@@ -10,10 +10,13 @@
 
 ```mermaid
 flowchart TD
-    ISSUE["이슈<br/>템플릿 6항목"] --> PRE{"착수 전 확인"}
+    START["시작하거나 이어받는다"] --> RE["재진입 · LOOP-08<br/>종료 조건 · 최대 횟수<br/>마지막 상태 코멘트로<br/>attempt 복원 · 없으면 0"]
+    RE --> PRE{"착수 전 확인"}
 
+    PRE -->|"사람 차례로 넘어가 있음"| WAIT["진행하지 않는다<br/>사람의 답을 기다린다"]
     PRE -->|"ESCALATE 에 걸림"| BLOCK["차단<br/>사람이 기준을 정할 때까지"]
-    PRE -->|"OOS 에 걸림"| BLOCK2["중단<br/>안 만들기로 한 것이다<br/>SSOT 부터 고쳐야 한다"]
+    PRE -->|"OOS(Out of Scope) 에 걸림"| BLOCK2["중단<br/>안 만들기로 한 것이다<br/>SSOT 부터 고쳐야 한다"]
+    PRE -->|"attempt 가 최대 이상"| STOPPED
     PRE -->|"통과"| BR["브랜치 생성<br/>WF-02 · main 에 직접 커밋하지 않는다"]
 
     BR --> TFIRST["테스트 먼저<br/>변경 전 실패를 확인한다"]
@@ -21,8 +24,9 @@ flowchart TD
 
     subgraph LOOP["구현 루프 — 기본 최대 3회 · LOOP-02"]
         direction TB
-        EDIT["코드 수정"] --> VERIFY["npm run verify<br/>1회로 센다 · LOOP-01"]
-        VERIFY -->|"실패"| CHECK{"계속 돌 수 있나"}
+        EDIT["코드 수정"] --> VERIFY["npm run verify 로컬<br/>1회로 센다 · LOOP-01"]
+        VERIFY --> NOTE["회차 코멘트<br/>이슈에 남긴다 · LOOP-07"]
+        NOTE -->|"FAIL"| CHECK{"계속 돌 수 있나"}
         CHECK -->|"횟수 남음"| EDIT
     end
 
@@ -30,27 +34,45 @@ flowchart TD
     CHECK -->|"같은 실패 2회"| STOPPED
     CHECK -->|"횟수 소진"| STOPPED
 
-    VERIFY -->|"통과"| REPORT
-    STOPPED --> REPORT
+    NOTE -->|"PASS"| HANDOFF
+    STOPPED --> HANDOFF
 
-    REPORT["보고 · WF-07<br/>회차<br/>변경 파일과 근거 ID<br/>종료 조건 상태<br/>수동 미확인 항목"]
-    REPORT --> COMMIT["커밋 + 푸시<br/>origin 에만 · WF-05"]
-    COMMIT --> HUMAN["사람이 머지<br/>WF-06"]
-    HUMAN --> DONE["이슈 종료"]
+    HANDOFF["인계 코멘트 · LOOP-06<br/>회차 · 변경 파일과 근거 ID<br/>종료 조건 상태<br/>수동 미확인"]
+    HANDOFF --> COMMIT["커밋 + 푸시<br/>origin 에만 · WF-05"]
+    COMMIT --> NEXT["CI 턴 → 2번 그림"]
 
-    BLOCK --> REPORT
-    BLOCK2 --> REPORT
+    BLOCK --> HANDOFF
+    BLOCK2 --> HANDOFF
 ```
 
-**읽는 법** — 실패든 성공이든 **모든 길이 `보고` 로 모인다.** 조용히 끝나는 경로가 없다.
+**읽는 법** — 실패든 성공이든 **모든 길이 `인계 코멘트` 로 모인다.** 조용히 끝나는 경로가 없다. 그리고 상태는 세션이 아니라 **이슈**에 남으므로, 창을 닫아도 `재진입` 으로 되돌아온다.
 
 ---
 
-## 2. `npm run verify` — 한 회차 안에서 도는 5단계
+## 2. CI 턴 — 푸시한 뒤
+
+```mermaid
+flowchart TD
+    PUSH["커밋 + 푸시"] --> CI["CI 가 npm run verify 실행<br/>attempt 로 세지 않는다 · LOOP-09"]
+
+    CI -->|"PASS"| HUMAN["사람 차례<br/>머지 · WF-06"]
+    CI -->|"FAIL"| LOCAL["같은 커밋에서 로컬 verify<br/>재확인 · 세지 않는다<br/>LOOP-09"]
+
+    LOCAL -->|"같은 실패가 재현된다"| BACK["루프로 복귀<br/>attempt 를 이어서 센다"]
+    LOCAL -->|"로컬은 통과한다"| MISMATCH["사람 차례 · LOOP-10<br/>원인은 코드가 아니라 환경<br/>OS · Node · 캐시 · 시각"]
+
+    HUMAN --> DONE["이슈 종료"]
+```
+
+**CI 는 시도가 아니다.** 같은 코드를 다른 기계에서 돌려보는 것이므로 횟수를 쓰지 않는다. 다만 **CI 와 로컬이 갈리면** 파고들지 말고 사람에게 넘긴다 — 재현되지 않는 실패를 에이전트가 계속 추적하는 것을 막는다.
+
+---
+
+## 3. `npm run verify` — 한 회차 안에서 도는 5단계
 
 ```mermaid
 flowchart LR
-    S1["1 verify:harness<br/>보호 경로 12개"] --> S2["2 typecheck<br/>tsc noEmit"]
+    S1["1 verify:harness<br/>보호 경로 13개"] --> S2["2 typecheck<br/>tsc noEmit"]
     S2 --> S3["3 lint<br/>ESLint"]
     S3 --> S4["4 test<br/>vitest"]
     S4 --> S5["5 build<br/>next build"]
@@ -68,7 +90,7 @@ flowchart LR
 
 ---
 
-## 3. 루프 중 어긋남을 발견하면
+## 4. 루프 중 어긋남을 발견하면
 
 ```mermaid
 flowchart TD
@@ -88,7 +110,7 @@ flowchart TD
 
 ---
 
-## 4. 루프가 건드릴 수 있는 것
+## 5. 루프가 건드릴 수 있는 것
 
 ```mermaid
 flowchart LR
