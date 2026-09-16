@@ -126,7 +126,7 @@ ID는 **재사용하지 않는다.** 항목이 폐기되면 번호를 비우고 
 | 애플리케이션 코드 | `src/**` · `prisma/seed.ts` · `prisma/migrations/**` | Issue 범위 내 수정 |
 | Issue별 테스트 | `tests/**` | 작성 · 수정 |
 | 요구사항 · 아키텍처 | `docs/01-requirements.md` · `docs/06-architecture.md` · **이 문서 §1~§5** | 읽기 |
-| 하네스 핵심 규칙 | `AGENTS.md`(진입점) · `CLAUDE.md` · **이 문서 §0 · §6.1 · §8** · `10-implementation-loop.md` · `11-verification-loop.md` | 읽기 |
+| 하네스 핵심 규칙 | `AGENTS.md`(진입점) · `CLAUDE.md` · **이 문서 §0 · §6.1 · §8** · `10-implementation-loop.md` · `02-verification.md` | 읽기 |
 | 검증 스크립트 | `scripts/verify-*.ts` · `scripts/snapshot.ts` · `package.json` 의 `scripts` | 실행 |
 | **등급 미정** | `prisma/schema.prisma` · `docs/02`~`05` · `docs/07` · `README.md` · 설정 파일(`*.config.*` `.env*` `.gitignore`) | → `ESCALATE-06` |
 
@@ -823,7 +823,7 @@ SSOT가 요구하는데 코드에 아직 없는 것. **판단이 갈리지 않�
 | 문서 | 상태 | 입력 | 출력 |
 |---|---|---|---|
 | [`10-implementation-loop.md`](./10-implementation-loop.md) | ⏳ 추후 | `REQ-F-*` `ARCH-*` `RULE-*` `OOS-*` `GAP-*` | 코드 변경 |
-| [`11-verification-loop.md`](./11-verification-loop.md) | ⏳ 추후 | `INV-*` `DOD-*` `REQ-N-*` | 통과/실패 판정 · 증거 |
+| [`02-verification.md`](./02-verification.md) | ⏳ 추후 | `INV-*` `DOD-*` `REQ-N-*` | 통과/실패 판정 · 증거 |
 
 §5.1 커버리지 공백과 §6.3 `GAP-*` 가 두 루프의 **첫 작업 목록**이다.
 
@@ -867,6 +867,8 @@ SSOT가 요구하는데 코드에 아직 없는 것. **판단이 갈리지 않�
 4) git checkout 으로 복원
    npm run verify:harness               → 통과 (exit 0)
 ```
+
+> 위 출력의 `docs/harness/ssot.md` 는 **당시 파일명 그대로**다. 2026-09-16 에 `01-ssot.md` 로 바뀌었다. 실행 기록이므로 고치지 않는다.
 
 #### `B2-2` 재측정 (2026-09-15, 본문 이전 후)
 

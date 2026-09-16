@@ -1,7 +1,7 @@
 /**
  * 하네스 보호 경로 검증.
  *
- * ssot.md §0.6 에서 AI 에게 "읽기" 또는 "실행"만 허용된 파일이
+ * 01-ssot.md §0.6 에서 AI 에게 "읽기" 또는 "실행"만 허용된 파일이
  * 사람 승인 없이 바뀌지 않았는지 확인한다.
  *
  *   npm run verify:harness              # 검증 — 바뀌었으면 exit 1
@@ -16,13 +16,14 @@ import path from 'node:path'
 const ROOT = process.cwd()
 const MANIFEST = path.join(ROOT, 'docs/harness/protected.json')
 
-/** ssot.md §0.6 경로 매핑에서 AI 가 고칠 수 없는 것만 추린 목록 */
+/** 01-ssot.md §0.6 경로 매핑에서 AI 가 고칠 수 없는 것만 추린 목록 */
 const PROTECTED = [
   { file: 'AGENTS.md', area: '하네스 핵심 규칙', ai: '읽기' },
   { file: 'CLAUDE.md', area: '하네스 핵심 규칙', ai: '읽기' },
-  { file: 'docs/harness/ssot.md', area: '하네스 핵심 규칙 + 요구사항·아키텍처', ai: '읽기' },
+  { file: 'docs/harness/01-ssot.md', area: '하네스 핵심 규칙 + 요구사항·아키텍처', ai: '읽기' },
+  { file: 'docs/harness/02-verification.md', area: '하네스 핵심 규칙', ai: '읽기' },
+  { file: 'docs/harness/03-loop.md', area: '하네스 핵심 규칙', ai: '읽기' },
   { file: 'docs/harness/10-implementation-loop.md', area: '하네스 핵심 규칙', ai: '읽기' },
-  { file: 'docs/harness/11-verification-loop.md', area: '하네스 핵심 규칙', ai: '읽기' },
   { file: 'docs/01-requirements.md', area: '요구사항', ai: '읽기' },
   { file: 'docs/06-architecture.md', area: '아키텍처', ai: '읽기' },
   { file: 'scripts/verify-harness.ts', area: '검증 스크립트', ai: '실행' },
@@ -42,7 +43,7 @@ function update() {
   const files: Record<string, string> = {}
   for (const { file } of PROTECTED) files[file] = digest(file)
   const manifest: Manifest = {
-    note: 'ssot.md §0.6 보호 경로의 기준선. 사람이 승인한 변경 뒤에만 갱신한다.',
+    note: '01-ssot.md §0.6 보호 경로의 기준선. 사람이 승인한 변경 뒤에만 갱신한다.',
     generatedAt: new Date().toISOString(),
     files,
   }
@@ -59,7 +60,7 @@ function verify() {
   const manifest: Manifest = JSON.parse(readFileSync(MANIFEST, 'utf-8'))
   const failures: string[] = []
 
-  console.log('▸ 보호 경로 검증 (ssot.md §0.6)\n')
+  console.log('▸ 보호 경로 검증 (01-ssot.md §0.6)\n')
   for (const { file, area, ai } of PROTECTED) {
     const expected = manifest.files[file]
     if (!expected) {
@@ -97,7 +98,7 @@ function verify() {
   console.error(`\n▸ 실패 ${failures.length}건 — 보호 경로가 승인 없이 바뀌었다`)
   for (const f of failures) console.error(`    · ${f}`)
   console.error(
-    '\n  이 파일들은 사람이 변경·승인하는 영역이다 (ssot.md §0.6).',
+    '\n  이 파일들은 사람이 변경·승인하는 영역이다 (01-ssot.md §0.6).',
     '\n  의도한 변경이라면 사람이 확인한 뒤 `npm run verify:harness -- --update` 로 기준선을 갱신한다.',
   )
   process.exit(1)

@@ -54,7 +54,7 @@ src/generated
 # typescript
 *.tsbuildinfo
 
-# 에이전트 진입점 — 추적한다 (AGENTS.md 가 docs/harness/ssot.md 로 라우팅)
+# 에이전트 진입점 — 추적한다 (AGENTS.md 가 docs/harness/01-ssot.md 로 라우팅)
 # next dev 가 nextjs-agent-rules 블록을 자동 갱신하지만 마커 밖 내용은 보존된다
 # CLAUDE.md 는 @AGENTS.md 한 줄
 

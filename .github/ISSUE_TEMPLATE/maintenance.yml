@@ -10,14 +10,14 @@ body:
         아래 6개가 채워지면 에이전트가 작업을 시작할 수 있다.
         **비어 있으면 에이전트는 추측하지 않고 되묻는다.**
 
-        규범은 [`docs/harness/ssot.md`](https://github.com/overpassion/inventory-poc/blob/main/docs/harness/ssot.md) 하나이고,
+        규범은 [`docs/harness/01-ssot.md`](https://github.com/overpassion/inventory-poc/blob/main/docs/harness/01-ssot.md) 하나이고,
         진입점은 [`AGENTS.md`](https://github.com/overpassion/inventory-poc/blob/main/AGENTS.md) 다.
 
   - type: input
     id: harness-id
     attributes:
       label: 관련 하네스 ID
-      description: "`ssot.md` 의 ID. 없으면 `없음` 이라고 쓴다."
+      description: "`01-ssot.md` 의 ID. 없으면 `없음` 이라고 쓴다."
       placeholder: "GAP-02 · REQ-F-09 · DOD-09"
     validations:
       required: true
@@ -49,7 +49,7 @@ body:
     id: done
     attributes:
       label: 3. 종료 조건 — 무엇이 참이면 완료인가
-      description: 검증 가능한 문장으로 쓴다. `ssot.md` §2.4 의 `DOD-*` 를 인용해도 된다.
+      description: 검증 가능한 문장으로 쓴다. `01-ssot.md` §2.4 의 `DOD-*` 를 인용해도 된다.
       placeholder: |
         - DOD-09 임계일 이내 로트가 알림에 뜨고, 폐기 확정 전까지 재고에서 빠지지 않는다
         - 홈 배너를 눌러 /expiry 로 이동했을 때 404 가 아니다
@@ -77,8 +77,8 @@ body:
       label: 5. 건드리면 안 되는 것 — 변경 경계는 어디인가
       description: 기본 금지 외에 이 작업에서 특별히 손대면 안 되는 것을 덧붙인다.
       value: |
-        - `ssot.md` §0.6 읽기 전용 영역 — 문서 · 하네스 규칙 · 검증 스크립트
-        - `ssot.md` §2.3 `OOS-*` 범위 제외 항목
+        - `01-ssot.md` §0.6 읽기 전용 영역 — 문서 · 하네스 규칙 · 검증 스크립트
+        - `01-ssot.md` §2.3 `OOS-*` 범위 제외 항목
         - `RULE-01` 재고 변경은 `lib/stock.ts` 의 `applyMovement()` 한 곳
         - (이 작업 고유의 경계를 여기에 추가)
     validations:
@@ -103,7 +103,7 @@ body:
     attributes:
       label: 착수 전 확인
       options:
-        - label: "`ssot.md` §6.1 `ESCALATE-*` 에 걸린 항목이 아니다 — 걸렸다면 사람이 먼저 기준을 정해야 한다"
+        - label: "`01-ssot.md` §6.1 `ESCALATE-*` 에 걸린 항목이 아니다 — 걸렸다면 사람이 먼저 기준을 정해야 한다"
           required: true
-        - label: "이 작업이 `OOS-*`(범위 제외)를 넘지 않는다 — 넘긴다면 `ssot.md` 부터 고쳐야 한다"
+        - label: "이 작업이 `OOS-*`(범위 제외)를 넘지 않는다 — 넘긴다면 `01-ssot.md` 부터 고쳐야 한다"
           required: true
