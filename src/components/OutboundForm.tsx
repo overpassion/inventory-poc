@@ -11,7 +11,7 @@ import { Qty } from './Qty'
 import { saveOutbound } from '@/actions/outbound'
 import { ALLOCATION_REASON, planFefo } from '@/lib/fefo'
 import { formatDate, humanizeRemaining } from '@/lib/date'
-import { expiryStatus } from '@/lib/expiry'
+import { expiryStatus, withExpiryStatus } from '@/lib/expiry'
 import { OUTBOUND_REASONS, REASON_LABEL, type ReasonCode } from '@/lib/constants'
 
 export type OutLot = {
@@ -211,16 +211,19 @@ export function OutboundForm({
               자동으로 되돌리기
             </button>
           </div>
-          {myLots
-            .slice()
-            .sort((a, b) => a.expiryDate.getTime() - b.expiryDate.getTime())
-            .map((l) => (
+          {withExpiryStatus(
+            myLots.slice().sort((a, b) => a.expiryDate.getTime() - b.expiryDate.getTime())
+          ).map((l) => (
               <div
                 key={l.id}
                 className="flex items-center justify-between border-b border-line px-4 py-2.5"
               >
                 <div>
-                  <p className="text-[12.5px] font-bold tnum">{formatDate(l.expiryDate)}</p>
+                  {/* 만료·임박 로트를 직접 고르는 자리다 — 경고를 여기서도 보여준다 (RULE-06) */}
+                  <p className="flex items-center gap-1.5 text-[12.5px] font-bold tnum">
+                    {formatDate(l.expiryDate)}
+                    <ExpiryBadge status={l.status} />
+                  </p>
                   <p className="text-[10.5px] text-sub">
                     보유 {l.quantity}{product.unit} · {humanizeRemaining(l.expiryDate)}
                   </p>
