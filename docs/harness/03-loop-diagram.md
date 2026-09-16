@@ -13,7 +13,7 @@ flowchart TD
     ISSUE["이슈<br/>템플릿 6항목"] --> PRE{"착수 전 확인"}
 
     PRE -->|"ESCALATE 에 걸림"| BLOCK["차단<br/>사람이 기준을 정할 때까지"]
-    PRE -->|"OOS 초과"| BLOCK2["중단<br/>SSOT 부터 고쳐야 한다"]
+    PRE -->|"OOS 에 걸림"| BLOCK2["중단<br/>안 만들기로 한 것이다<br/>SSOT 부터 고쳐야 한다"]
     PRE -->|"통과"| BR["브랜치 생성<br/>WF-02 · main 에 직접 커밋하지 않는다"]
 
     BR --> TFIRST["테스트 먼저<br/>변경 전 실패를 확인한다"]

@@ -105,5 +105,5 @@ body:
       options:
         - label: "`01-ssot.md` §6.1 `ESCALATE-*` 에 걸린 항목이 아니다 — 걸렸다면 사람이 먼저 기준을 정해야 한다"
           required: true
-        - label: "이 작업이 `OOS-*`(범위 제외)를 넘지 않는다 — 넘긴다면 `01-ssot.md` 부터 고쳐야 한다"
+        - label: "이 작업이 `OOS-*`(안 만들기로 한 것)에 걸리지 않는다 — 걸린다면 `01-ssot.md` 에서 그 항목을 먼저 빼야 한다"
           required: true
