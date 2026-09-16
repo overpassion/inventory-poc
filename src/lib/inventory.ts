@@ -1,7 +1,14 @@
 import { db } from './db'
 import { addDays, dateOnly, daysUntil, today } from './date'
 import { expiryStatus, type ExpiryStatus } from './expiry'
-import { AVAILABLE_LOCATION_TYPES, LOCATION_TYPES, TRANSIT_DELAY_DAYS } from './constants'
+import {
+  AVAILABLE_LOCATION_TYPES,
+  LOCATION_TYPES,
+  MOVEMENT_TYPES,
+  TRANSIT_DELAY_DAYS,
+  type MovementType,
+  type ReasonCode,
+} from './constants'
 
 /** 재고 목록 한 줄에 필요한 것 (05-design 4.4) */
 export type StockRowData = {
@@ -266,6 +273,63 @@ export async function getFulfillmentLocations(): Promise<FulfillmentCard[]> {
       : null,
     skuCount: new Set(l.lots.map((lot) => lot.productId)).size,
     total: l.lots.reduce((s, lot) => s + lot.quantity, 0),
+  }))
+}
+
+export type HistoryRow = {
+  id: number
+  createdAt: Date
+  type: MovementType
+  reason: ReasonCode | null
+  note: string | null
+  productName: string
+  unit: string
+  expiryDate: Date
+  quantity: number
+  fromName: string | null // null = 외부
+  toName: string | null // null = 외부
+  userName: string
+  isReversal: boolean // 이 기록 자체가 상쇄 기록이다
+  reversed: boolean // 이미 취소됐다
+  canCancel: boolean
+}
+
+/**
+ * 이력 조회 (F10).
+ *
+ * `Movement` 가 이력의 원본이다. 기록은 수정·삭제하지 않고 **반대 기록으로 상쇄**한다.
+ * 그래서 목록에는 원본과 상쇄가 **둘 다** 남는다 — 지워진 것처럼 보이면 안 된다.
+ *
+ * 취소 가능 조건은 `RULE-08` 이 정한다. 화면은 그 결과만 보여준다:
+ *   상쇄 기록 자체가 아니고, 아직 취소되지 않았을 것.
+ */
+export async function getHistory(params: { type?: string; take?: number } = {}) {
+  const { type, take = 100 } = params
+  const valid = (MOVEMENT_TYPES as Record<string, string>)[type ?? '']
+
+  const movements = await db.movement.findMany({
+    where: valid ? { type: valid } : undefined,
+    include: { product: true, user: true, fromLocation: true, toLocation: true, reversedBy: true },
+    orderBy: { createdAt: 'desc' },
+    take,
+  })
+
+  return movements.map<HistoryRow>((m) => ({
+    id: m.id,
+    createdAt: m.createdAt,
+    type: m.type as MovementType,
+    reason: (m.reason as ReasonCode) ?? null,
+    note: m.note,
+    productName: m.product.name,
+    unit: m.product.unit,
+    expiryDate: m.expiryDate,
+    quantity: m.quantity,
+    fromName: m.fromLocation?.name ?? null,
+    toName: m.toLocation?.name ?? null,
+    userName: m.user.name,
+    isReversal: m.reversalOfId !== null,
+    reversed: m.reversedBy.length > 0,
+    canCancel: m.reversalOfId === null && m.reversedBy.length === 0,
   }))
 }
 

@@ -19,9 +19,15 @@ export function SearchHeader({
         <Link href="/" className="text-[15px] font-extrabold tracking-tight">
           재고
         </Link>
-        <form action={logout}>
-          <button className="text-[11.5px] opacity-85">{userName} · 로그아웃</button>
-        </form>
+        <div className="flex items-center gap-3">
+          {/* 조회 화면은 작업(＋)과 섞지 않는다 */}
+          <Link href="/history" className="text-[11.5px] opacity-85">
+            이력
+          </Link>
+          <form action={logout}>
+            <button className="text-[11.5px] opacity-85">{userName} · 로그아웃</button>
+          </form>
+        </div>
       </div>
 
       <p className="mt-1 text-[11.5px] opacity-85">
