@@ -1,10 +1,10 @@
 {
   "note": "01-ssot.md §0.6 보호 경로의 기준선. 사람이 승인한 변경 뒤에만 갱신한다.",
-  "generatedAt": "2026-09-16T05:11:38.149Z",
+  "generatedAt": "2026-09-16T05:24:25.700Z",
   "files": {
     "AGENTS.md": "b75450dbfb08fabd5bc7766b797b6a5f965ec1c9c1e63c845e763ee1ca6e2402",
     "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
-    "docs/harness/01-ssot.md": "90475b3a590a186da30a05fb5d365405ba83c821608f911a3dd3f7846bf99bb6",
+    "docs/harness/01-ssot.md": "be0300e173d6e3c93a48a49f569fe1e32e66432e0362154c07dd385fda3063d1",
     "docs/harness/02-verification.md": "3b147aa37b7de55e7b3b9a00b121162319599f5547945820767c7652ca700ab0",
     "docs/harness/03-loop.md": "e78d1eee58e2d8b6ae5693e3fa70073ea22281f33723ca33fec24cce0bbfeedd",
     "docs/harness/03-loop-diagram.md": "2f74e571562edb7b1a9d38a83b373dd1c8812d5871abb0410895c551ebc6f3e1",
