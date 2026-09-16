@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { todoHref } from '@/lib/inventory'
 
 /**
  * 오늘 할 일 (E2) — 얇은 한 줄.
@@ -24,7 +25,7 @@ export function TodoBanner({
 
   return (
     <Link
-      href={pendingReflect > 0 ? '/fulfillment' : transfersDelayed > 0 ? '/transfers' : '/expiry'}
+      href={todoHref({ pendingReflect, transfersDelayed })}
       className="flex items-center justify-between border-b border-[#f3e3cd] bg-amber-bg px-4 py-2.5 text-[11.5px] font-semibold text-amber"
     >
       <span>⚠ 오늘 할 일 {parts.length} · {parts.join(' · ')}</span>

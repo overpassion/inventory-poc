@@ -790,7 +790,7 @@ SSOT가 요구하는데 코드에 아직 없는 것. **판단이 갈리지 않�
 | ID | 갭 | 근거 |
 |---|---|---|
 | `GAP-01` | `actions/adjust.ts` 없음 — `REQ-F-08` 재고 조정 미구현 (M7) | `06 §2` 에 명시되어 있으나 파일 부재 |
-| `GAP-02` | `app/expiry/` `app/history/` `app/settings/` 라우트 없음 (M7) | 홈 할 일 배너가 `/expiry` 로 링크되어 **404** |
+| `GAP-02` | `app/expiry/` `app/history/` `app/settings/` 라우트 없음 (M7) | 세 화면은 여전히 없다. ~~홈 할 일 배너 404~~ 는 2026-09-16 해소 — 배너를 홈의 만료 필터(`/?filter=expired`)로 보냈다. 화면이 생기면 `todoHref()` 한 줄만 되돌린다 |
 | ~~`GAP-03`~~ | `REQ-N-07` 백업 절차가 `README.md` 에 없다 | **해소됨** (2026-09-16) — `README.md` 에 「백업과 복구」 절 추가. `backup/` 을 `.gitignore` 에 넣는 것은 `ESCALATE-06` 에 걸려 못 했고, 그 사실을 README 에 경고로 적었다 |
 | `GAP-06` | **`db.ts` 가 WAL 모드를 설정하지 않는다** — 주석은 "WAL 모드로 열어..." 라고 하는데 `PRAGMA journal_mode` 를 실행하지 않는다. 실제 `dev.db` 는 `delete` 모드다 | §3.7 이 *"SQLite는 WAL 모드로 연다 — 읽기와 쓰기가 서로 막지 않는다"* 를 요구한다. 동시성 전제가 성립하지 않고, `07-plan.md` §2 의 "두 브라우저 동시 출고(WAL 충돌 확인)" 도 의미가 달라진다 |
 | ~~`GAP-04`~~ | `npm run lint` 실패 (`react-hooks/purity` 2건) | **해소됨** (2026-09-15) — `lib/date.ts` 에 `daysSince()` 를 추가하고, 두 곳 모두 `daysSince` / `daysUntil` 헬퍼를 쓰도록 바꿨다. `npm run verify` 5단계가 처음으로 끝까지 통과 |

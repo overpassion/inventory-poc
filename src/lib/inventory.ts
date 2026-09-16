@@ -269,6 +269,19 @@ export async function getFulfillmentLocations(): Promise<FulfillmentCard[]> {
   }))
 }
 
+/**
+ * 할 일 배너가 데려갈 곳 (E2).
+ *
+ * 배너가 약속한 것을 보여주는 화면으로만 보낸다.
+ * 만료는 전용 화면(`/expiry`)이 아직 없으므로 홈의 만료 필터로 보낸다 —
+ * 같은 정보가 거기 있다. 화면이 생기면 이 한 줄만 바꾸면 된다 (GAP-02).
+ */
+export function todoHref(t: { pendingReflect: number; transfersDelayed: number }) {
+  if (t.pendingReflect > 0) return '/fulfillment'
+  if (t.transfersDelayed > 0) return '/transfers'
+  return '/?filter=expired'
+}
+
 /** 마지막 반영일은 단순 날짜가 아니라 그 거점 숫자의 신뢰도다 (P6) */
 export function reflectedLabel(daysSince: number | null) {
   if (daysSince === null) return '없음'
